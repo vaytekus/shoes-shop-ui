@@ -1,3 +1,8 @@
+export interface Category {
+  id: string
+  name: string
+}
+
 export interface Product {
   id: string
   name: string
@@ -5,7 +10,8 @@ export interface Product {
   price: number
   stockQuantity: number
   imageUrl: string
-  category: string
+  categoryId: string | null
+  categoryName: string | null
 }
 
 export interface BasketItem {

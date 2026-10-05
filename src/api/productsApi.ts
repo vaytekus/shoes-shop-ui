@@ -9,8 +9,15 @@ export interface PagedResult<T> {
   totalPages: number
 }
 
-export const getProducts = (page = 1, pageSize = 12) => 
-  client.get<PagedResult<Product>>(`/api/products?page=${page}&pageSize=${pageSize}`)
+export const getProducts = (page = 1, pageSize = 12, categoryId?: string) => {
+  const params = new URLSearchParams({page: String(page), pageSize: String(pageSize) })
+
+  if(categoryId){
+    params.append('categoryId', categoryId)
+  }
+
+  return client.get<PagedResult<Product>>(`/api/products?${params}`)
+}
 
 export const getProduct = (id: string) => 
   client.get<Product>(`/api/products/${id}`)
