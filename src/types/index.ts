@@ -9,7 +9,7 @@ export interface Product {
   description: string
   price: number
   stockQuantity: number
-  imageUrl: string
+  imageUrls: string[]
   categoryId: string | null
   categoryName: string | null
 }

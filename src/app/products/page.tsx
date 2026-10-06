@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import Link from 'next/link'
 import { getProducts } from '@/api/productsApi'
 import { getCategories } from '@/api/categoriesApi'
+import ProductCard from '@/components/products/ProductCard'  // <- додано
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1)
@@ -56,23 +56,7 @@ export default function ProductsPage() {
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {data?.items.map(product => (
-              <Link key={product.id} href={`/products/${product.id}`} className="group">
-                <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-3">
-                  {product.imageUrl ? (
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300 text-sm">
-                      No image
-                    </div>
-                  )}
-                </div>
-                <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
-                <p className="text-sm text-gray-500 mt-0.5">${product.price}</p>
-              </Link>
+              <ProductCard key={product.id} product={product} />  // <- замінено
             ))}
           </div>
 
