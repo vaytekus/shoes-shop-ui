@@ -1,12 +1,13 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { getProducts } from '@/api/productsApi'
 import { getCategories } from '@/api/categoriesApi'
 import ProductCard from '@/components/products/ProductCard'
 
-export default function ProductsPage() {
+export default function CategoryPage() {
+  const { category } = useParams<{ category: string }>()
   const router = useRouter()
   const searchParams = useSearchParams()
   const page = Number(searchParams.get('page') ?? '1')
@@ -16,28 +17,40 @@ export default function ProductsPage() {
     queryFn: () => getCategories().then(r => r.data),
   })
 
+  const activeCat = categories?.find(
+    c => c.name.toLowerCase() === category.toLowerCase()
+  )
+
   const { data, isLoading } = useQuery({
-    queryKey: ['products', page],
-    queryFn: () => getProducts(page, 12).then(r => r.data),
+    queryKey: ['products', page, activeCat?.id],
+    queryFn: () => getProducts(page, 12, activeCat?.id).then(r => r.data),
+    enabled: !!activeCat,
   })
 
   const setPage = (p: number) => {
-    router.push(`/products?page=${p}`)
+    router.push(`/products/${category}?page=${p}`)
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">All Products</h1>
+      <h1 className="text-2xl font-bold mb-6">{activeCat?.name ?? category}</h1>
 
       <div className="flex gap-2 mb-8 flex-wrap">
-        <button className="px-4 py-1.5 rounded-full text-sm border bg-gray-900 text-white border-gray-900">
+        <button
+          onClick={() => router.push('/products')}
+          className="px-4 py-1.5 rounded-full text-sm border border-gray-300 text-gray-600 hover:border-gray-900 transition-colors"
+        >
           All
         </button>
         {categories?.map(cat => (
           <button
             key={cat.id}
             onClick={() => router.push(`/products/${cat.name.toLowerCase()}`)}
-            className="px-4 py-1.5 rounded-full text-sm border border-gray-300 text-gray-600 hover:border-gray-900 transition-colors"
+            className={`px-4 py-1.5 rounded-full text-sm border transition-colors ${
+              category.toLowerCase() === cat.name.toLowerCase()
+                ? 'bg-gray-900 text-white border-gray-900'
+                : 'border-gray-300 text-gray-600 hover:border-gray-900'
+            }`}
           >
             {cat.name}
           </button>
@@ -53,7 +66,6 @@ export default function ProductsPage() {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-
           {data && data.totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-10">
               <button
@@ -63,9 +75,7 @@ export default function ProductsPage() {
               >
                 Previous
               </button>
-              <span className="px-4 py-2 text-sm text-gray-600">
-                {page} / {data.totalPages}
-              </span>
+              <span className="px-4 py-2 text-sm text-gray-600">{page} / {data.totalPages}</span>
               <button
                 onClick={() => setPage(page + 1)}
                 disabled={page === data.totalPages}

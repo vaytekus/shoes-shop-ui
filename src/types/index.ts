@@ -20,6 +20,7 @@ export interface BasketItem {
   price: number
   quantity: number
   imageUrl: string
+  categoryName: string
 }
 
 export interface Basket {

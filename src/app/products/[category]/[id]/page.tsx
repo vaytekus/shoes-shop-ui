@@ -1,18 +1,50 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import Link from 'next/link'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams, useRouter } from 'next/navigation'
 import { getProduct } from '@/api/productsApi'
+import { addItem, getBasket } from '@/api/basketApi'
+import { useCustomerId } from '@/hooks/useCustomerId'
 
 export default function ProductPage(){
-  const { id } = useParams<{id: string}>()
+  const { id } = useParams<{id: string, category: string}>()
   const router = useRouter()
   const [activeImage, setActiveImage] = useState(0)
+  const [added, setAdded] = useState(false)
+  const customerId = useCustomerId()
+  const queryClient = useQueryClient()
 
   const {data: product, isLoading, isError} = useQuery({
     queryKey: ['product', id],
     queryFn: () => getProduct(id).then(r => r.data)
+  })
+
+  const { data: basket } = useQuery({
+    queryKey: ['basket', customerId],
+    queryFn: () => getBasket(customerId!).then(r => r.data).catch(err => {
+      if (err.response?.status === 404) return null
+      throw err
+    }),
+    enabled: !!customerId,
+  })
+
+  const isInBasket = basket?.items.some(i => i.productId === id) ?? false
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => addItem(customerId!, {
+      productId: product!.id,
+      productName: product!.name,
+      price: product!.price,
+      quantity: 1,
+      imageUrl: product!.imageUrls[0] ?? '',
+      categoryName: product!.categoryName ?? ''
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['basket'] })
+      setAdded(true)
+    }
   })
 
   if (isLoading) return <div className="text-center py-20 text-gray-400">Loading...</div>
@@ -71,12 +103,22 @@ export default function ProductPage(){
               {product.stockQuantity > 0 ? `In stock: ${product.stockQuantity}` : 'Out of stock'}
             </p>
 
-            <button
-              disabled={product.stockQuantity === 0}
-              className="w-full bg-gray-900 text-white py-3 rounded-lg text-sm hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Add to basket
-            </button>
+            {isInBasket || added ? (
+              <Link
+                href="/basket"
+                className="w-full bg-green-600 text-white py-3 rounded-lg text-sm text-center block hover:bg-green-700 transition-colors"
+              >
+                Go to basket
+              </Link>
+            ) : (
+              <button
+                disabled={product.stockQuantity === 0 || isPending}
+                onClick={() => mutate()}
+                className="w-full bg-gray-900 text-white py-3 rounded-lg text-sm hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {isPending ? 'Adding...' : 'Add to basket'}
+              </button>
+            )}
           </div>
         </div>
       </div>

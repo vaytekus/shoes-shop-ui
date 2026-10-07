@@ -54,7 +54,7 @@ export default function HomePage() {
             {categories.map(cat => (
               <Link
                 key={cat.id}
-                href={`/products?categoryId=${cat.id}`}
+                href={`/products/${cat.name.toLowerCase()}`}
                 className="group border border-gray-200 rounded-xl p-8 text-center hover:border-gray-900 hover:-translate-y-1 transition-all duration-200"
               >
                 <div className="text-4xl mb-4">👟</div>
