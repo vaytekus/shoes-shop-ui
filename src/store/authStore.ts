@@ -1,10 +1,12 @@
 import { create } from 'zustand'
 
 interface AuthState {
-  token: string | null,
-  customerId: string | null,
-  setToken: (token: string) => void,
-  clearToken: () => void,
+  accessToken: string | null
+  customerId: string | null
+  isInitialized: boolean
+  setAccessToken: (accessToken: string) => void
+  clearAccessToken: () => void
+  setInitialized: () => void
   isAuthenticated: () => boolean
 }
 
@@ -19,9 +21,18 @@ const parseSubFromToken = (token: string): string | null => {
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-  token: null,
+  accessToken: null,
   customerId: null,
-  setToken: (token) => set({token, customerId: parseSubFromToken(token)}),
-  clearToken: () => set({token: null, customerId: null}),
-  isAuthenticated: () => get().token !== null
+  isInitialized: false,
+
+  setAccessToken: (accessToken) => {
+    set({ accessToken, customerId: parseSubFromToken(accessToken) })
+  },
+  clearAccessToken: () => {
+    set({ accessToken: null, customerId: null })
+  },
+  setInitialized: () => {
+    set({isInitialized: true})
+  },
+  isAuthenticated: () => get().accessToken !== null
 }))
