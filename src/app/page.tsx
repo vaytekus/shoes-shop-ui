@@ -3,17 +3,12 @@
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { getProducts } from '@/api/productsApi'
-import { getCategories } from '@/api/categoriesApi'
-import ProductCard from '@/components/products/ProductCard'  // <- додано
+import ProductCard from '@/components/products/ProductCard'
+import { navItems } from '@/components/layout/Header'
 
 const BRANDS = ['Nike', 'Adidas', 'Puma', 'New Balance', 'Vans', 'Converse', 'Reebok', 'Timberland']
 
 export default function HomePage() {
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => getCategories().then(r => r.data),
-  })
-
   const { data: newArrivals } = useQuery({
     queryKey: ['products', 1, 8],
     queryFn: () => getProducts(1, 8).then(r => r.data),
@@ -47,23 +42,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {categories && categories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 py-20">
-          <h2 className="text-2xl font-bold text-gray-900 mb-10">Categories</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.map(cat => (
-              <Link
-                key={cat.id}
-                href={`/products/${cat.name.toLowerCase()}`}
-                className="group border border-gray-200 rounded-xl p-8 text-center hover:border-gray-900 hover:-translate-y-1 transition-all duration-200"
-              >
-                <div className="text-4xl mb-4">👟</div>
-                <p className="text-sm font-medium text-gray-900">{cat.name}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+      <section className="max-w-7xl mx-auto px-4 py-20">
+        <h2 className="text-2xl font-bold text-gray-900 mb-10">Категорії</h2>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {navItems.map(cat => (
+            <Link
+              key={cat.href}
+              href={cat.href}
+              className="group border border-gray-200 rounded-xl p-8 text-center hover:border-gray-900 hover:-translate-y-1 transition-all duration-200"
+            >
+              <div className="text-4xl mb-4">{cat.emoji}</div>
+              <p className="text-sm font-medium text-gray-900">{cat.label}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {newArrivals && newArrivals.items.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 py-20 border-t border-gray-100">

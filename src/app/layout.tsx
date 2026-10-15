@@ -5,6 +5,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import QueryProvider from '@/providers/QueryProvider';
 import AuthInitializer from '@/components/AuthInitializer';
+import TopBar from '@/components/layout/TopBar';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: {children: React.ReactNode}) {
       <body className="min-h-screen flex flex-col">
         <QueryProvider>
           <AuthInitializer />
+          <TopBar />
           <Header />
           <main className="flex-1">
             {children}
