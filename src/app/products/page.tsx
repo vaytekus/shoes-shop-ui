@@ -36,7 +36,7 @@ export default function ProductsPage() {
         {categories?.map(cat => (
           <button
             key={cat.id}
-            onClick={() => router.push(`/products/${cat.name.toLowerCase()}`)}
+            onClick={() => router.push(`/products/all/${cat.name.toLowerCase()}`)}
             className="px-4 py-1.5 rounded-full text-sm border border-gray-300 text-gray-600 hover:border-gray-900 transition-colors"
           >
             {cat.name}

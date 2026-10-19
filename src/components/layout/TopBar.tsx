@@ -8,6 +8,7 @@ import CityModal from './CityModal'
 const topLinks = [
   { label: 'Новинки', href: '/new' },
   { label: 'Бренди', href: '/brands' },
+  { label: 'Акції', href: '/sales' },
   { label: 'Наші магазини', href: '/stores' },
   { label: 'Доставка та оплата', href: '/delivery' },
   { label: 'Блог', href: '/blog' },

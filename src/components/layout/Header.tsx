@@ -16,17 +16,79 @@ export const navItems = [
     label: 'Жіноче взуття',
     href: '/products/women',
     emoji: '👠',
-    items: ["Балетки", "Босоніжки", "В'єтнамки", "Кеди", "Кросівки", "Лофери", "Мокасини", "Мюлі", "Оксфорди", "Слінгбеки", "Сліпони", "Туфлі", "Туфлі перфорація", "Туфлі човники", "Уггі", "Челсі", "Черевики", "Черевики ковбойки", "Чоботи", "Шльопанці"],
+    items: [
+      { label: "Балетки", slug: "ballet-flats" },
+      { label: "Босоніжки", slug: "sandals" },
+      { label: "В'єтнамки", slug: "flip-flops" },
+      { label: "Кеди", slug: "sneakers" },
+      { label: "Кросівки", slug: "running-shoes" },
+      { label: "Лофери", slug: "loafers" },
+      { label: "Мокасини", slug: "moccasins" },
+      { label: "Мюлі", slug: "mules" },
+      { label: "Оксфорди", slug: "oxfords" },
+      { label: "Слінгбеки", slug: "slingbacks" },
+      { label: "Сліпони", slug: "slip-ons" },
+      { label: "Туфлі", slug: "heels" },
+      { label: "Туфлі перфорація", slug: "perforated-heels" },
+      { label: "Туфлі човники", slug: "pumps" },
+      { label: "Уггі", slug: "uggs" },
+      { label: "Челсі", slug: "chelsea" },
+      { label: "Черевики", slug: "boots" },
+      { label: "Черевики ковбойки", slug: "cowboy-boots" },
+      { label: "Чоботи", slug: "tall-boots" },
+      { label: "Шльопанці", slug: "slides" },
+    ],
   },
   {
     label: 'Чоловіче взуття',
     href: '/products/men',
     emoji: '👞',
-    items: ["Кросівки", "Черевики", "Туфлі", "Лофери", "Мокасини", "Кеди", "Сліпони", "Уггі", "Челсі", "Шльопанці"],
+    items: [
+      { label: "Кросівки", slug: "sneakers" },
+      { label: "Черевики", slug: "boots" },
+      { label: "Туфлі", slug: "dress-shoes" },
+      { label: "Лофери", slug: "loafers" },
+      { label: "Мокасини", slug: "moccasins" },
+      { label: "Кеди", slug: "canvas-sneakers" },
+      { label: "Сліпони", slug: "slip-ons" },
+      { label: "Уггі", slug: "uggs" },
+      { label: "Челсі", slug: "chelsea" },
+      { label: "Шльопанці", slug: "slides" },
+    ],
   },
-  { label: 'Сумки', href: '/products/bags', emoji: '👜', items: ["Клатчі", "Рюкзаки", "Шопери", "Крос-боді", "Тоут-беги"] },
-  { label: 'Аксесуари', href: '/products/accessories', emoji: '🎀', items: ["Ремені", "Гаманці", "Шкарпетки", "Шнурки"] },
-  { label: 'Догляд', href: '/products/care', emoji: '✨', items: ["Засоби догляду", "Устілки", "Колодки"] },
+  {
+    label: 'Сумки',
+    href: '/products/bags',
+    emoji: '👜',
+    items: [
+      { label: "Клатчі", slug: "clutches" },
+      { label: "Рюкзаки", slug: "backpacks" },
+      { label: "Шопери", slug: "shoppers" },
+      { label: "Крос-боді", slug: "crossbody" },
+      { label: "Тоут-беги", slug: "tote-bags" },
+    ],
+  },
+  {
+    label: 'Аксесуари',
+    href: '/products/accessories',
+    emoji: '🎀',
+    items: [
+      { label: "Ремені", slug: "belts" },
+      { label: "Гаманці", slug: "wallets" },
+      { label: "Шкарпетки", slug: "socks" },
+      { label: "Шнурки", slug: "laces" },
+    ],
+  },
+  {
+    label: 'Догляд',
+    href: '/products/care',
+    emoji: '✨',
+    items: [
+      { label: "Засоби догляду", slug: "care-products" },
+      { label: "Устілки", slug: "insoles" },
+      { label: "Колодки", slug: "shoe-trees" },
+    ],
+  },
 ]
 
 export default function Header() {
@@ -83,11 +145,11 @@ export default function Header() {
                 <div className="absolute left-0 top-full bg-white border border-gray-100 shadow-lg rounded-b-lg w-52 py-2 z-50">
                   {item.items.map(sub => (
                     <Link
-                      key={sub}
-                      href={`${item.href}/${sub.toLowerCase().replace(/\s+/g, '-')}`}
+                      key={sub.slug}
+                      href={`${item.href}/${sub.slug}`}
                       className="block px-4 py-1.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     >
-                      {sub}
+                      {sub.label}
                     </Link>
                   ))}
                 </div>

@@ -3,15 +3,33 @@ export interface Category {
   name: string
 }
 
+export interface ProductSize {
+  id: string
+  size: string
+  stockQuantity: number
+}
+
+export interface ProductVariant {
+  id: string
+  name: string
+  sku: string | null
+  colorName: string | null
+  colorHex: string | null
+  imageUrls: string[]
+  sizes: ProductSize[]
+}
+
 export interface Product {
   id: string
   name: string
   description: string
   price: number
-  stockQuantity: number
-  imageUrls: string[]
+  brand: string | null
+  gender: string | null
+  discountPercent: number | null
   categoryId: string | null
   categoryName: string | null
+  variants: ProductVariant[]
 }
 
 export interface BasketItem {
