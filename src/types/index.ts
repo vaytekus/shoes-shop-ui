@@ -25,10 +25,22 @@ export interface Product {
   description: string
   price: number
   brand: string | null
-  gender: string | null
+  section: string | null
   discountPercent: number | null
+  isNew: boolean
   categoryId: string | null
   categoryName: string | null
+  upperMaterial: string | null
+  liningMaterial: string | null
+  insoleMaterial: string | null
+  soleMaterial: string | null
+  width: string | null
+  season: string | null
+  heelHeight: string | null
+  purpose: string | null
+  style: string | null
+  brandCountry: string | null
+  manufactureCountry: string | null
   variants: ProductVariant[]
 }
 

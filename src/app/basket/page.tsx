@@ -66,7 +66,7 @@ export default function BasketPage() {
       <div className="divide-y divide-gray-100">
         {basket.items.map(item => (
           <div key={item.productId} className="flex gap-4 py-6">
-            <Link href={`/products/${item.categoryName || 'all'}/${item.productId}`} className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+            <Link href={`/products/item/${item.productId}`} className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
               {item.imageUrl ? (
                 <img src={item.imageUrl} alt={item.productName} className="w-full h-full object-contain hover:scale-105 transition-transform duration-300" />
               ) : (
@@ -76,7 +76,7 @@ export default function BasketPage() {
 
             <div className="flex-1 flex flex-col justify-between">
               <div className="flex items-start justify-between">
-                <Link href={`/products/${item.categoryName || 'all'}/${item.productId}`} className="text-sm font-medium text-gray-900 hover:underline">
+                <Link href={`/products/item/${item.productId}`} className="text-sm font-medium text-gray-900 hover:underline">
                   {item.productName}
                 </Link>
                 <button
