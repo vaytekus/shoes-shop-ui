@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ShoppingCart, User, Heart } from 'lucide-react'
+import { ShoppingCart, User, Heart, Search } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useQuery } from '@tanstack/react-query'
 import { getBasket } from '@/api/basketApi'
@@ -10,11 +10,12 @@ import { logoutRequest } from '@/api/authApi'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Logo from './Logo'
+import SearchOverlay from './SearchOverlay'
 
 export const navItems = [
   {
     label: 'Жіноче взуття',
-    href: '/products/women',
+    href: '/search?section=women',
     emoji: '👠',
     items: [
       { label: "Балетки", slug: "ballet-flats" },
@@ -41,7 +42,7 @@ export const navItems = [
   },
   {
     label: 'Чоловіче взуття',
-    href: '/products/men',
+    href: '/search?section=men',
     emoji: '👞',
     items: [
       { label: "Кросівки", slug: "sneakers" },
@@ -58,7 +59,7 @@ export const navItems = [
   },
   {
     label: 'Сумки',
-    href: '/products/bags',
+    href: '/search?section=bags',
     emoji: '👜',
     items: [
       { label: "Клатчі", slug: "clutches" },
@@ -70,7 +71,7 @@ export const navItems = [
   },
   {
     label: 'Аксесуари',
-    href: '/products/accessories',
+    href: '/search?section=accessories',
     emoji: '🎀',
     items: [
       { label: "Ремені", slug: "belts" },
@@ -81,7 +82,7 @@ export const navItems = [
   },
   {
     label: 'Догляд',
-    href: '/products/care',
+    href: '/search?section=care',
     emoji: '✨',
     items: [
       { label: "Засоби догляду", slug: "care-products" },
@@ -98,6 +99,7 @@ export default function Header() {
   const router = useRouter()
   const [activeNav, setActiveNav] = useState<string | null>(null)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
 
   const { data: basket } = useQuery({
     queryKey: ['basket', customerId],
@@ -120,6 +122,7 @@ export default function Header() {
   const authenticated = isAuthenticated()
 
   return (
+    <>
     <header className="border-b border-gray-100 bg-white sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         <Link href="/" className="shrink-0">
@@ -159,6 +162,13 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-5">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <Search className="w-5 h-5" />
+          </button>
+
           <Link href="/wishlist" className="text-gray-600 hover:text-gray-900 transition-colors">
             <Heart className="w-5 h-5" />
           </Link>
@@ -209,5 +219,8 @@ export default function Header() {
         </div>
       </div>
     </header>
+
+    {searchOpen && <SearchOverlay onClose={() => setSearchOpen(false)} />}
+  </>
   )
 }

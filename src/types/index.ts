@@ -83,3 +83,35 @@ export interface Order {
   totalAmount: number
   createdAt: string
 }
+
+export interface FacetItem {
+  value: string
+  count: number
+}
+
+export interface SearchFacets {
+  brands: FacetItem[]
+  seasons: FacetItem[]
+  sizes: FacetItem[]
+  colors: FacetItem[]
+  purposes: FacetItem[]
+  categories: FacetItem[]
+}
+
+export interface SearchProductDocument {
+  id: string
+  name: string
+  brand: string | null
+  price: number | null
+  discountPercent: number | null
+  imageUrl: string | null
+  categoryName: string | null
+  section: string | null
+  isNew: boolean
+}
+
+export interface SearchResult {
+  items: SearchProductDocument[]
+  total: number
+  facets: SearchFacets
+}

@@ -45,10 +45,10 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: 'Жіноче взуття', href: '/products/women', img: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&h=800&fit=crop&q=80' },
-            { label: 'Чоловіче взуття', href: '/products/men', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=800&fit=crop&q=80' },
-            { label: 'Дитяче взуття', href: '/products/kids', img: 'https://images.unsplash.com/photo-1555274175-6cbf6f3b137b?w=600&h=800&fit=crop&q=80' },
-            { label: 'Сумки', href: '/products/bags', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop&q=80' },
+            { label: 'Жіноче взуття', href: '/search?section=women', img: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&h=800&fit=crop&q=80' },
+            { label: 'Чоловіче взуття', href: '/search?section=men', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=800&fit=crop&q=80' },
+            { label: 'Дитяче взуття', href: '/search?section=kids', img: 'https://images.unsplash.com/photo-1555274175-6cbf6f3b137b?w=600&h=800&fit=crop&q=80' },
+            { label: 'Сумки', href: '/search?section=bags', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=800&fit=crop&q=80' },
           ].map(cat => (
             <Link
               key={cat.href}
