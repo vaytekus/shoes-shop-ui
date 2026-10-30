@@ -32,9 +32,7 @@ export default function SearchOverlay({ onClose }: Props) {
       setLoading(true)
       setError(null)
       try {
-        console.log('Searching for:', query)
         const res = await searchProducts({ q: query, pageSize: 5 })
-        console.log('Search result:', res.data)
         setSuggestions(res.data.items)
       } catch (e) {
         console.error('Search overlay error:', e)

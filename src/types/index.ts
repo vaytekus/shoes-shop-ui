@@ -17,6 +17,7 @@ export interface ProductVariant {
   colorHex: string | null
   imageUrls: string[]
   sizes: ProductSize[]
+  isPrimary?: boolean
 }
 
 export interface Product {
