@@ -30,7 +30,7 @@ export default function RootLayout({ children }: {children: React.ReactNode}) {
           <AuthInitializer />
           <TopBar />
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 flex flex-col">
             {children}
           </main>
           <Footer />

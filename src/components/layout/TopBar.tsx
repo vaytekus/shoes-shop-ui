@@ -10,9 +10,9 @@ const topLinks = [
   { label: 'Бренди', href: '/brands' },
   { label: 'Акції', href: '/sales' },
   { label: 'Наші магазини', href: '/stores' },
-  { label: 'Доставка та оплата', href: '/delivery' },
+  { label: 'Доставка та оплата', href: '/info/delivery' },
   { label: 'Блог', href: '/blog' },
-  { label: 'Контакти', href: '/contacts' },
+  { label: 'Контакти', href: '/info/contacts' },
 ]
 
 export default function TopBar() {
