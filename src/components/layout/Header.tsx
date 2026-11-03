@@ -8,7 +8,7 @@ import { getBasket } from '@/api/basketApi'
 import { useCustomerId } from '@/hooks/useCustomerId'
 import { logoutRequest } from '@/api/authApi'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Logo from './Logo'
 import SearchOverlay from './SearchOverlay'
 
@@ -100,6 +100,17 @@ export default function Header() {
   const [activeNav, setActiveNav] = useState<string | null>(null)
   const [profileOpen, setProfileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const profileRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
 
   const { data: basket } = useQuery({
     queryKey: ['basket', customerId],
@@ -183,22 +194,21 @@ export default function Header() {
           </Link>
 
           {authenticated ? (
-            <div
-              className="relative"
-              onMouseEnter={() => setProfileOpen(true)}
-              onMouseLeave={() => setProfileOpen(false)}
-            >
-              <button className="relative text-gray-600 hover:text-gray-900 transition-colors">
+            <div ref={profileRef} className="relative">
+              <button
+                onClick={() => setProfileOpen(o => !o)}
+                className="relative text-gray-600 hover:text-gray-900 transition-colors"
+              >
                 <User className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" />
               </button>
 
               {profileOpen && (
                 <div className="absolute right-0 top-full bg-white border border-gray-100 rounded shadow-md w-44 py-1 z-20">
-                  <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                  <Link href="/profile" onClick={() => setProfileOpen(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                     Профіль
                   </Link>
-                  <Link href="/profile/password" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                  <Link href="/profile/password" onClick={() => setProfileOpen(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                     Змінити пароль
                   </Link>
                   <hr className="my-1 border-gray-100" />

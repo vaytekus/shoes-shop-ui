@@ -1,6 +1,9 @@
 'use client'
 
+import { Heart } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/store/authStore'
+import { useWishlistStore } from '@/store/wishlistStore'
 import type { SearchProductDocument } from '@/types'
 
 interface Props {
@@ -9,6 +12,10 @@ interface Props {
 
 export default function SearchProductCard({ product }: Props) {
   const router = useRouter()
+  const authCustomerId = useAuthStore(state => state.customerId)
+  const { toggle, isInWishlist } = useWishlistStore()
+  const inWishlist = isInWishlist(product.id)
+
   const section = product.section?.toLowerCase() ?? 'all'
   const category = product.categoryName?.toLowerCase() ?? 'all'
   const url = `/products/${section}/${category}/${product.id}`
@@ -22,7 +29,7 @@ export default function SearchProductCard({ product }: Props) {
       className="group flex flex-col cursor-pointer"
       onClick={() => router.push(url)}
     >
-      <div className="aspect-square rounded-xl overflow-hidden mb-3">
+      <div className="aspect-square rounded-xl overflow-hidden mb-3 relative">
         {product.imageUrl ? (
           <img
             src={product.imageUrl}
@@ -32,6 +39,15 @@ export default function SearchProductCard({ product }: Props) {
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-200 text-5xl">👟</div>
         )}
+        <button
+          onClick={e => {
+            e.stopPropagation()
+            toggle({ productId: product.id, productName: product.name, price: product.price ?? 0, imageUrl: product.imageUrl ?? '', section: product.section ?? 'all', categoryName: product.categoryName ?? 'all' }, authCustomerId)
+          }}
+          className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
+        >
+          <Heart className={`w-4 h-4 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+        </button>
       </div>
 
       <p className="text-xs text-gray-400 mb-1">{product.brand}</p>

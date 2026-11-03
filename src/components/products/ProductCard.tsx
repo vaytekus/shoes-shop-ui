@@ -2,10 +2,13 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { Heart } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useCustomerId } from '@/hooks/useCustomerId'
+import { useAuthStore } from '@/store/authStore'
 import { addItem } from '@/api/basketApi'
+import { useWishlistStore } from '@/store/wishlistStore'
 import type { Product } from '@/types'
 
 interface Props {
@@ -21,6 +24,10 @@ export default function ProductCard({ product }: Props) {
   const firstVariant = product.variants?.[0]
   const firstImage = firstVariant?.imageUrls?.[0]
   const isInStock = product.variants?.some(v => v.sizes.some(s => s.stockQuantity > 0)) ?? false
+
+  const authCustomerId = useAuthStore(state => state.customerId)
+  const { toggle, isInWishlist } = useWishlistStore()
+  const inWishlist = isInWishlist(product.id)
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => addItem(customerId!, {
@@ -56,6 +63,15 @@ export default function ProductCard({ product }: Props) {
             <span className="text-xs text-gray-400 font-medium">Out of stock</span>
           </div>
         )}
+        <button
+          onClick={e => {
+            e.stopPropagation()
+            toggle({ productId: product.id, productName: product.name, price: product.price, imageUrl: firstImage ?? '', section: product.gender ?? 'all', categoryName: product.categoryName ?? 'all' }, authCustomerId)
+          }}
+          className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
+        >
+          <Heart className={`w-4 h-4 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+        </button>
       </div>
 
       {added ? (

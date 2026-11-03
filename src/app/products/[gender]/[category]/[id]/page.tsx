@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { Heart } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { getProduct } from '@/api/productsApi'
 import { addItem, getBasket } from '@/api/basketApi'
 import { useCustomerId } from '@/hooks/useCustomerId'
+import { useAuthStore } from '@/store/authStore'
+import { useWishlistStore } from '@/store/wishlistStore'
 import type { ProductVariant, ProductSize } from '@/types'
 
 export default function ProductPage() {
@@ -20,6 +23,9 @@ export default function ProductPage() {
   const [activeSize, setActiveSize] = useState<ProductSize | null>(null)
   const [activeImage, setActiveImage] = useState(0)
   const [added, setAdded] = useState(false)
+
+  const authCustomerId = useAuthStore(state => state.customerId)
+  const { toggle, isInWishlist } = useWishlistStore()
 
   const { data: product, isLoading, isError } = useQuery({
     queryKey: ['product', id],
@@ -163,19 +169,27 @@ export default function ProductPage() {
             </div>
           )}
 
-          {isInBasket || added ? (
-            <Link href="/basket" className="w-full bg-green-600 text-white py-3 rounded-lg text-sm text-center block hover:bg-green-700 transition-colors">
-              Go to basket
-            </Link>
-          ) : (
+          <div className="flex gap-3">
+            {isInBasket || added ? (
+              <Link href="/basket" className="flex-1 bg-green-600 text-white py-3 rounded-lg text-sm text-center block hover:bg-green-700 transition-colors">
+                Go to basket
+              </Link>
+            ) : (
+              <button
+                disabled={!activeSize || isPending}
+                onClick={() => customerId && mutate()}
+                className="flex-1 bg-gray-900 text-white py-3 rounded-lg text-sm hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {isPending ? 'Adding...' : activeSize ? 'Add to basket' : 'Select size'}
+              </button>
+            )}
             <button
-              disabled={!activeSize || isPending}
-              onClick={() => customerId && mutate()}
-              className="w-full bg-gray-900 text-white py-3 rounded-lg text-sm hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+              onClick={() => product && toggle({ productId: product.id, productName: product.name, price: product.price, imageUrl: currentImages[0] ?? '', section: product.gender ?? 'all', categoryName: product.categoryName ?? 'all' }, authCustomerId)}
+              className="px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-900 transition-colors"
             >
-              {isPending ? 'Adding...' : activeSize ? 'Add to basket' : 'Select size'}
+              <Heart className={`w-5 h-5 ${product && isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
             </button>
-          )}
+          </div>
 
           {/* Characteristics */}
           {[

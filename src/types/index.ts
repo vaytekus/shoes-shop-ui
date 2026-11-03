@@ -45,6 +45,20 @@ export interface Product {
   variants: ProductVariant[]
 }
 
+export interface WishlistItem {
+  productId: string
+  productName: string
+  price: number
+  imageUrl: string
+  section: string
+  categoryName: string
+}
+
+export interface Wishlist {
+  customerId: string
+  items: WishlistItem[]
+}
+
 export interface BasketItem {
   productId: string
   productName: string

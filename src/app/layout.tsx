@@ -4,7 +4,8 @@ import "./globals.css";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import QueryProvider from '@/providers/QueryProvider';
-import AuthInitializer from '@/components/AuthInitializer';
+import AuthInitializer from '@/components/AuthInitializer'
+import WishlistInitializer from '@/components/WishlistInitializer';
 import TopBar from '@/components/layout/TopBar';
 
 const geistSans = Geist({
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: {children: React.ReactNode}) {
       <body className="min-h-screen flex flex-col">
         <QueryProvider>
           <AuthInitializer />
+          <WishlistInitializer />
           <TopBar />
           <Header />
           <main className="flex-1 flex flex-col">
