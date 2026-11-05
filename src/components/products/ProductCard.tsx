@@ -44,7 +44,7 @@ export default function ProductCard({ product }: Props) {
     }
   })
 
-  const productUrl = `/products/${product.gender ?? 'all'}/${product.categoryName?.toLowerCase() ?? 'all'}/${product.id}`
+  const productUrl = `/products/${product.section ?? 'all'}/${product.categoryName?.toLowerCase() ?? 'all'}/${product.id}`
 
   return (
     <div className="group flex flex-col cursor-pointer" onClick={() => router.push(productUrl)}>
@@ -66,7 +66,7 @@ export default function ProductCard({ product }: Props) {
         <button
           onClick={e => {
             e.stopPropagation()
-            toggle({ productId: product.id, productName: product.name, price: product.price, imageUrl: firstImage ?? '', section: product.gender ?? 'all', categoryName: product.categoryName ?? 'all' }, authCustomerId)
+            toggle({ productId: product.id, productName: product.name, price: product.price, imageUrl: firstImage ?? '', section: product.section ?? 'all', categoryName: product.categoryName ?? 'all' }, authCustomerId)
           }}
           className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
         >

@@ -32,3 +32,15 @@ export async function changePasswordRequest(currentPassword: string, newPassword
 export async function deleteAccountRequest() {
   return client.delete('/api/users/me')
 }
+
+export async function getMeRequest() {
+  return client.get<{ firstName: string; lastName: string; email: string; avatarUrl: string | null }>('/api/users/me')
+}
+
+export async function uploadAvatarRequest(file: File) {
+  const form = new FormData()
+  form.append('file', file)
+  return client.post<{ avatarUrl: string }>('/api/users/me/avatar', form, {
+    headers: { 'Content-Type': undefined }
+  })
+}

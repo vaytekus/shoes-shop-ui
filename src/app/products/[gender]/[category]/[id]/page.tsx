@@ -184,7 +184,7 @@ export default function ProductPage() {
               </button>
             )}
             <button
-              onClick={() => product && toggle({ productId: product.id, productName: product.name, price: product.price, imageUrl: currentImages[0] ?? '', section: product.gender ?? 'all', categoryName: product.categoryName ?? 'all' }, authCustomerId)}
+              onClick={() => product && toggle({ productId: product.id, productName: product.name, price: product.price, imageUrl: currentImages[0] ?? '', section: product.section ?? 'all', categoryName: product.categoryName ?? 'all' }, authCustomerId)}
               className="px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-900 transition-colors"
             >
               <Heart className={`w-5 h-5 ${product && isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
