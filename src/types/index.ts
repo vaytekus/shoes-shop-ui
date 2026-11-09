@@ -66,6 +66,7 @@ export interface BasketItem {
   quantity: number
   imageUrl: string
   categoryName: string
+  size: string
 }
 
 export interface Basket {

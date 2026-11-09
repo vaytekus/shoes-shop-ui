@@ -51,7 +51,7 @@ export default function ProductPage() {
     enabled: !!customerId,
   })
 
-  const isInBasket = basket?.items.some(i => i.productId === id) ?? false
+  const isInBasket = basket?.items.some(i => i.productId === id && i.size === (activeSize?.size ?? '')) ?? false
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => addItem(customerId!, {
@@ -60,7 +60,8 @@ export default function ProductPage() {
       price: product!.price,
       quantity: 1,
       imageUrl: currentImages[0] ?? '',
-      categoryName: product!.categoryName ?? ''
+      categoryName: product!.categoryName ?? '',
+      size: activeSize?.size ?? '',
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['basket'] })
@@ -151,10 +152,10 @@ export default function ProductPage() {
             <div className="mb-6">
               <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Size (EU)</p>
               <div className="flex gap-2 flex-wrap">
-                {currentVariant.sizes.map(s => (
+                {[...currentVariant.sizes].sort((a, b) => parseFloat(a.size) - parseFloat(b.size)).map(s => (
                   <button key={s.id}
                     disabled={s.stockQuantity === 0}
-                    onClick={() => setActiveSize(s)}
+                    onClick={() => { setActiveSize(s); setAdded(false) }}
                     className={`px-3 py-2 text-sm border rounded-lg transition-colors ${
                       s.stockQuantity === 0
                         ? 'border-gray-200 text-gray-300 line-through cursor-not-allowed'

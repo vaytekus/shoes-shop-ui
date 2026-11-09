@@ -7,11 +7,14 @@ export const getBasket = (customerId: string) =>
 export const addItem = (customerId: string, item: Omit<BasketItem, 'quantity'> & { quantity: number }) =>
   client.post(`/api/basket/${customerId}/items`, item)
 
-export const removeItem = (customerId: string, productId: string) =>
-  client.delete(`/api/basket/${customerId}/items/${productId}`)
+export const removeItem = (customerId: string, productId: string, size: string) =>
+  client.delete(`/api/basket/${customerId}/items/${productId}`, { params: { size } })
 
 export const updateItem = (customerId: string, productId: string, item: Omit<BasketItem, 'quantity'> & { quantity: number }) =>
   client.put(`/api/basket/${customerId}/items/${productId}`, item)
 
 export const clearBasket = (customerId: string) =>
   client.delete(`/api/basket/${customerId}`)
+
+export const mergeBasket = (customerId: string, guestId: string) =>
+  client.post(`/api/basket/${customerId}/merge`, { guestId })

@@ -22,14 +22,15 @@ export default function BasketPage() {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['basket'] })
 
   const { mutate: updateQty } = useMutation({
-    mutationFn: ({ productId, productName, price, imageUrl, categoryName, quantity }: {
-      productId: string, productName: string, price: number, imageUrl: string, categoryName: string, quantity: number
-    }) => updateItem(customerId!, productId, { productId, productName, price, imageUrl, categoryName, quantity }),
+    mutationFn: ({ productId, productName, price, imageUrl, categoryName, size, quantity }: {
+      productId: string, productName: string, price: number, imageUrl: string, categoryName: string, size: string, quantity: number
+    }) => updateItem(customerId!, productId, { productId, productName, price, imageUrl, categoryName, size, quantity }),
     onSuccess: invalidate,
   })
 
   const { mutate: remove } = useMutation({
-    mutationFn: (productId: string) => removeItem(customerId!, productId),
+    mutationFn: ({ productId, size }: { productId: string, size: string }) =>
+      removeItem(customerId!, productId, size),
     onSuccess: invalidate,
   })
 
@@ -77,22 +78,25 @@ export default function BasketPage() {
               </Link>
 
               <div className="flex-1 min-w-0 flex flex-col justify-between">
-                <div className="flex items-start justify-between gap-4">
-                  <Link href={`/products/item/${item.productId}`} className="text-sm font-medium text-gray-900 hover:underline truncate">
-                    {item.productName}
-                  </Link>
-                  <button
-                    onClick={() => remove(item.productId)}
-                    className="text-gray-300 hover:text-gray-900 transition-colors text-lg leading-none shrink-0"
-                  >
-                    ×
-                  </button>
+                <div>
+                  <div className="flex items-start justify-between gap-4">
+                    <Link href={`/products/item/${item.productId}`} className="text-sm font-medium text-gray-900 hover:underline truncate">
+                      {item.productName}
+                    </Link>
+                    <button
+                      onClick={() => remove({ productId: item.productId, size: item.size })}
+                      className="text-gray-300 hover:text-gray-900 transition-colors text-lg leading-none shrink-0"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  {item.size && <p className="text-sm text-gray-500 mt-1">Розмір: <span className="font-medium text-gray-900">{item.size}</span></p>}
                 </div>
 
                 <div className="flex items-center justify-between mt-3">
                   <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                     <button
-                      onClick={() => item.quantity === 1 ? remove(item.productId) : updateQty({ ...item, quantity: item.quantity - 1 })}
+                      onClick={() => item.quantity === 1 ? remove({ productId: item.productId, size: item.size }) : updateQty({ ...item, quantity: item.quantity - 1 })}
                       className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
                     >
                       −

@@ -36,7 +36,8 @@ export default function ProductCard({ product }: Props) {
       price: product.price,
       quantity: 1,
       imageUrl: firstImage ?? '',
-      categoryName: product.categoryName ?? ''
+      categoryName: product.categoryName ?? '',
+      size: '',
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['basket'] })

@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import QueryProvider from '@/providers/QueryProvider';
 import AuthInitializer from '@/components/AuthInitializer'
 import WishlistInitializer from '@/components/WishlistInitializer';
+import BasketInitializer from '@/components/BasketInitializer';
 import TopBar from '@/components/layout/TopBar';
 
 const geistSans = Geist({
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: {children: React.ReactNode}) {
         <QueryProvider>
           <AuthInitializer />
           <WishlistInitializer />
+          <BasketInitializer />
           <TopBar />
           <Header />
           <main className="flex-1 flex flex-col">

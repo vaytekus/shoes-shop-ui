@@ -24,7 +24,8 @@ function WishlistCard({ item }: { item: WishlistItem }) {
       price: item.price,
       quantity: 1,
       imageUrl: item.imageUrl,
-      categoryName: item.categoryName ?? ''
+      categoryName: item.categoryName ?? '',
+      size: '',
     }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['basket'] })
   })
@@ -77,7 +78,8 @@ function WishlistSummary({ items }: { items: WishlistItem[] }) {
           price: item.price,
           quantity: 1,
           imageUrl: item.imageUrl,
-          categoryName: item.categoryName ?? ''
+          categoryName: item.categoryName ?? '',
+          size: '',
         })
       }
     },
