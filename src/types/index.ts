@@ -131,3 +131,17 @@ export interface SearchResult {
   total: number
   facets: SearchFacets
 }
+
+export interface Review {
+  id: string
+  customerName: string
+  rating: number
+  text: string
+  createdAt: string
+}
+
+export interface ProductReviewResult {
+  reviews: Review[]
+  averageRating: number
+  totalCount: number
+}

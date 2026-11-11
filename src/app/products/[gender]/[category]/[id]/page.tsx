@@ -11,6 +11,8 @@ import { useCustomerId } from '@/hooks/useCustomerId'
 import { useAuthStore } from '@/store/authStore'
 import { useWishlistStore } from '@/store/wishlistStore'
 import type { ProductVariant, ProductSize } from '@/types'
+import ReviewList from '@/components/reviews/ReviewList'
+import ProductRating from '@/components/reviews/ProductRating'
 
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>()
@@ -104,9 +106,10 @@ export default function ProductPage() {
         <div className="flex flex-col">
           {product.categoryName && <p className="text-sm text-gray-400 mb-1">{product.categoryName}</p>}
           {product.brand && <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{product.brand}</p>}
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
             {[product.brand, currentVariant?.name].filter(Boolean).join(' ')}
           </h1>
+          <ProductRating productId={id} />
           {product.discountPercent ? (
             <div className="flex items-center gap-3 mb-4">
               <p className="text-2xl font-semibold text-red-600">
@@ -232,6 +235,8 @@ export default function ProductPage() {
           )}
         </div>
       </div>
+
+      <ReviewList productId={id} />
     </div>
   )
 }
