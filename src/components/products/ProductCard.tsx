@@ -10,6 +10,7 @@ import { useAuthStore } from '@/store/authStore'
 import { addItem } from '@/api/basketApi'
 import { useWishlistStore } from '@/store/wishlistStore'
 import type { Product } from '@/types'
+import StarRating from '@/components/reviews/StarRating'
 
 interface Props {
   product: Product
@@ -97,6 +98,12 @@ export default function ProductCard({ product }: Props) {
         {isInStock ? 'In stock' : 'Out of stock'}
       </p>
       <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
+      {product.averageRating > 0 && (
+        <div className="flex items-center gap-1 mt-0.5">
+          <StarRating value={Math.round(product.averageRating)} size={13} />
+          <span className="text-xs text-gray-400">{product.averageRating} ({product.reviewCount})</span>
+        </div>
+      )}
       {product.discountPercent ? (
         <div className="flex items-center gap-2 mt-1">
           <p className="text-sm font-bold text-red-600">

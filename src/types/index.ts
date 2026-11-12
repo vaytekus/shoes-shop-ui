@@ -43,6 +43,8 @@ export interface Product {
   brandCountry: string | null
   manufactureCountry: string | null
   variants: ProductVariant[]
+  averageRating: number
+  reviewCount: number
 }
 
 export interface WishlistItem {
@@ -124,6 +126,8 @@ export interface SearchProductDocument {
   categoryName: string | null
   section: string | null
   isNew: boolean
+  averageRating: number
+  reviewCount: number
 }
 
 export interface SearchResult {

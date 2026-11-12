@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/authStore'
 import { useWishlistStore } from '@/store/wishlistStore'
 import type { SearchProductDocument } from '@/types'
+import StarRating from '@/components/reviews/StarRating'
 
 interface Props {
   product: SearchProductDocument
@@ -52,6 +53,12 @@ export default function SearchProductCard({ product }: Props) {
 
       <p className="text-xs text-gray-400 mb-1">{product.brand}</p>
       <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
+      {product.averageRating > 0 && (
+        <div className="flex items-center gap-1 mt-0.5">
+          <StarRating value={Math.round(product.averageRating)} size={13} />
+          <span className="text-xs text-gray-400">{product.averageRating} ({product.reviewCount})</span>
+        </div>
+      )}
       {salePrice ? (
         <div className="flex items-center gap-2 mt-1">
           <p className="text-sm font-bold text-red-600">${salePrice}</p>

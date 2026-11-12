@@ -68,7 +68,7 @@ export default function BasketPage() {
       <div className="flex gap-10 items-start">
         <div className="flex-1">
           {basket.items.map(item => (
-            <div key={item.productId} className="flex gap-5 py-6 border-b border-gray-100">
+            <div key={`${item.productId}-${item.size}`} className="flex gap-5 py-6 border-b border-gray-100">
               <Link href={`/products/item/${item.productId}`} className="w-36 h-36 rounded-lg overflow-hidden shrink-0">
                 {item.imageUrl ? (
                   <img src={item.imageUrl} alt={item.productName} className="w-full h-full object-contain" />
