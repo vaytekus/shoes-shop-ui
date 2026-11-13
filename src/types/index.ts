@@ -84,18 +84,28 @@ export interface ShippingAddress {
   zipCode: string
 }
 
+export type DeliveryType = 'NovaPoshta' | 'UkrPoshta' | 'Pickup'
+export type PaymentMethod = 'CashOnDelivery' | 'CashInStore' | 'Online'
+
 export interface OrderItem {
   productId: string
   productName: string
   price: number
   quantity: number
   imageUrl: string
+  size: string
 }
 
 export interface Order {
   id: string
   customerId: string
   status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled'
+  firstName: string
+  lastName: string
+  phone: string
+  email: string
+  deliveryType: DeliveryType
+  paymentMethod: PaymentMethod
   shippingAddress: ShippingAddress
   items: OrderItem[]
   totalAmount: number

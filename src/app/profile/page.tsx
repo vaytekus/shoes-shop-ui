@@ -142,16 +142,15 @@ export default function ProfilePage() {
           </div>
         </section>
 
-        <section className="border-t border-gray-100 pt-8">
-          <h2 className="text-sm font-semibold mb-1 text-red-600">Небезпечна зона</h2>
-          <p className="text-xs text-gray-400 mb-3">Цю дію неможливо скасувати.</p>
+        <section className="border-t border-gray-100 pt-8 flex items-center gap-6">
           <button
             onClick={() => { if (confirm('Видалити акаунт?')) deleteAccount.mutate() }}
             disabled={deleteAccount.isPending}
-            className="border border-red-200 text-red-600 py-2 px-4 text-sm hover:bg-red-50 disabled:opacity-50 transition-colors"
+            className="shrink-0 border border-red-200 text-red-600 py-2 px-4 text-sm hover:bg-red-50 disabled:opacity-50 transition-colors"
           >
             {deleteAccount.isPending ? 'Видалення...' : 'Видалити акаунт'}
           </button>
+          <p className="text-xs text-gray-400">Буде видалено ваш акаунт, дані профілю та історія входів. Замовлення залишаться в системі. Цю дію неможливо скасувати.</p>
         </section>
       </div>
     </>

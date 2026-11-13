@@ -175,7 +175,7 @@ export default function ProductPage() {
             <button
               disabled={!activeSize || isPending}
               onClick={() => customerId && mutate()}
-              className="w-full bg-gray-900 text-white py-3 rounded-lg text-sm hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full bg-gray-900 text-white py-3 rounded-lg text-sm hover:bg-gray-700 disabled:opacity-40"
             >
               {isPending ? 'Adding...' : activeSize ? 'Add to basket' : 'Select size'}
             </button>

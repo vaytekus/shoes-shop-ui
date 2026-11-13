@@ -18,7 +18,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
   const router = useRouter()
 
   useEffect(() => {
-    if (isInitialized && !accessToken) router.push('/login')
+    if (isInitialized && !accessToken) router.push(`/login?from=${pathname}`)
   }, [isInitialized, accessToken])
 
   if (!isInitialized || !accessToken) return null
@@ -27,9 +27,6 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
     <div className="flex-1 flex flex-col">
       <div className="w-full max-w-7xl mx-auto px-4 py-10 flex gap-10">
         <aside className="w-64 shrink-0">
-          <div className="bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 mb-1">
-            Акаунт
-          </div>
           <nav className="flex flex-col">
             {navItems.map(item => (
               <Link

@@ -1,10 +1,29 @@
 import client from './client'
-import type { Order, ShippingAddress, BasketItem } from '@/types'
+import type { Order, DeliveryType, PaymentMethod } from '@/types'
+
+export interface CheckoutOrderItem {
+  productId: string
+  productName: string
+  price: number
+  quantity: number
+  imageUrl: string
+  size: string
+}
 
 export interface CreateOrderRequest {
-  customerId: string,
-  shippingAddress: ShippingAddress,
-  items: BasketItem[]
+  firstName: string
+  lastName: string
+  phone: string
+  email: string
+  deliveryType: DeliveryType
+  paymentMethod: PaymentMethod
+  shippingAddress: {
+    street: string
+    city: string
+    country: string
+    zipCode: string
+  }
+  items: CheckoutOrderItem[]
 }
 
 export const getOrders = () =>
@@ -13,8 +32,8 @@ export const getOrders = () =>
 export const getOrder = (id: string) =>
   client.get<Order>(`/api/orders/${id}`)
 
-export const getCustomerOrders = (customerId: string) =>
-  client.get<Order[]>(`/api/orders/customer/${customerId}`)
+export const getCustomerOrders = (customerId: string, page = 1, pageSize = 20) =>
+  client.get<{ items: Order[]; totalCount: number }>(`/api/orders/customer/${customerId}?page=${page}&pageSize=${pageSize}`)
 
 export const createOrder = (order: CreateOrderRequest) =>
-  client.post<string>('/api/orders', order)
+  client.post<{ id: string }>('/api/orders', order)

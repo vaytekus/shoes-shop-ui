@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthStore } from '@/store/authStore'
 import { loginRequest, registerRequest } from '@/api/authApi'
+import { Suspense } from 'react'
 
 type Mode = 'login' | 'register' | 'check-email'
 
-export default function AuthPage() {
+function AuthForm() {
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -17,12 +18,14 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false)
   const setAccessToken = useAuthStore(state => state.setAccessToken)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const from = searchParams.get('from') || '/'
 
   const loginMutation = useMutation({
     mutationFn: () => loginRequest(email, password),
     onSuccess: (accessToken) => {
       setAccessToken(accessToken)
-      router.push('/profile')
+      router.push(from)
     },
   })
 
@@ -61,7 +64,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-20 px-4">
+    <div className="w-full max-w-md mx-auto mt-20 px-4">
       <h1 className="text-2xl font-bold mb-6">
         {isLogin ? 'Sign In' : 'Create Account'}
       </h1>
@@ -74,14 +77,14 @@ export default function AuthPage() {
               placeholder="First Name"
               value={firstName}
               onChange={e => setFirstName(e.target.value)}
-              className="border border-gray-300 rounded px-3 py-2 text-sm"
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
             />
             <input
               type="text"
               placeholder="Last Name"
               value={lastName}
               onChange={e => setLastName(e.target.value)}
-              className="border border-gray-300 rounded px-3 py-2 text-sm"
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
             />
           </>
         )}
@@ -91,7 +94,7 @@ export default function AuthPage() {
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2 text-sm"
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
         />
         <div className="relative">
           <input
@@ -138,5 +141,13 @@ export default function AuthPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense>
+      <AuthForm />
+    </Suspense>
   )
 }
