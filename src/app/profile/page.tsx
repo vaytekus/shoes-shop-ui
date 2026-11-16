@@ -4,7 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { updateProfileRequest, deleteAccountRequest, getMeRequest, uploadAvatarRequest } from '@/api/authApi'
+import { getCustomerOrders } from '@/api/ordersApi'
 import { User } from 'lucide-react'
 import AvatarCropModal from '@/components/profile/AvatarCropModal'
 
@@ -28,6 +30,18 @@ export default function ProfilePage() {
     queryFn: () => getMeRequest().then(r => r.data),
     enabled: !!accessToken,
   })
+
+  const customerId = useAuthStore(s => s.customerId)
+
+  const { data: ordersData } = useQuery({
+    queryKey: ['customer-orders', customerId],
+    queryFn: () => getCustomerOrders(customerId!).then(r => r.data),
+    enabled: !!customerId,
+  })
+
+  const purchasedItems = (ordersData?.items ?? [])
+    .filter(o => o.status === 'Delivered')
+    .flatMap(o => o.items)
 
   useEffect(() => {
     if (!profile) return
@@ -153,6 +167,27 @@ export default function ProfilePage() {
           <p className="text-xs text-gray-400">Буде видалено ваш акаунт, дані профілю та історія входів. Замовлення залишаться в системі. Цю дію неможливо скасувати.</p>
         </section>
       </div>
+
+      {purchasedItems.length > 0 && (
+        <div className="mt-12 max-w-2xl">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Куплено</h2>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+            {purchasedItems.map((item, i) => (
+              <Link key={i} href={`/products/${item.productId}`} className="group">
+                <div className="aspect-square overflow-hidden rounded-lg mb-1">
+                  {item.imageUrl ? (
+                    <img src={item.imageUrl} alt={item.productName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
+                  ) : (
+                    <div className="w-full h-full bg-gray-100" />
+                  )}
+                </div>
+                <p className="text-xs text-gray-600 truncate">{item.productName}</p>
+                <p className="text-xs text-gray-400">{item.size}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   )
 }

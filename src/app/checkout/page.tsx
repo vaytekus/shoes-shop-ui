@@ -10,6 +10,9 @@ import { getBasket, clearBasket, removeItem, updateItem } from '@/api/basketApi'
 import { getMeRequest } from '@/api/authApi'
 import { createOrder } from '@/api/ordersApi'
 import type { DeliveryType, PaymentMethod, BasketItem } from '@/types'
+import type { NpCity, NpWarehouse } from '@/api/novaPoshtaApi'
+import CitySearch from '@/components/checkout/CitySearch'
+import WarehouseSelect from '@/components/checkout/WarehouseSelect'
 
 const DELIVERY_LABELS: Record<DeliveryType, string> = {
   NovaPoshta: 'Нова Пошта',
@@ -95,6 +98,8 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState('')
 
   const [deliveryType, setDeliveryType] = useState<DeliveryType>('NovaPoshta')
+  const [npCity, setNpCity] = useState<NpCity | null>(null)
+  const [npWarehouse, setNpWarehouse] = useState<NpWarehouse | null>(null)
   const [street, setStreet] = useState('')
   const [city, setCity] = useState('')
   const [zipCode, setZipCode] = useState('')
@@ -131,6 +136,8 @@ export default function CheckoutPage() {
   useEffect(() => {
     const available = PAYMENT_BY_DELIVERY[deliveryType]
     if (!available.includes(paymentMethod)) setPaymentMethod(available[0])
+    setNpCity(null)
+    setNpWarehouse(null)
   }, [deliveryType])
 
   const { mutate: removeBasketItem } = useMutation({
@@ -153,7 +160,9 @@ export default function CheckoutPage() {
       email,
       deliveryType,
       paymentMethod,
-      shippingAddress: { street, city, country: 'Ukraine', zipCode },
+      shippingAddress: deliveryType === 'NovaPoshta'
+        ? { street: npWarehouse?.Description ?? '', city: npCity?.Description ?? '', country: 'Ukraine', zipCode: '' }
+        : { street, city, country: 'Ukraine', zipCode },
       items: (basket?.items ?? []).map(i => ({
         productId: i.productId,
         productName: i.productName,
@@ -190,7 +199,9 @@ export default function CheckoutPage() {
   const step1Valid = firstName.length >= 2 && lastName.length >= 2
     && PHONE_DIGITS_RE.test(phoneDigits) && EMAIL_RE.test(email)
 
-  const step2Valid = deliveryType === 'Pickup' || (city.length >= 2 && street.length >= 2)
+  const step2Valid = deliveryType === 'Pickup'
+    || (deliveryType === 'NovaPoshta' && !!npCity && !!npWarehouse)
+    || (deliveryType === 'UkrPoshta' && city.length >= 2 && street.length >= 2)
 
   const completeStep = (step: number) => {
     setCompletedSteps(prev => new Set(prev).add(step))
@@ -202,14 +213,16 @@ export default function CheckoutPage() {
   const contactSummary = `${firstName} ${lastName} • +380${phoneDigits} • ${email}`
   const deliverySummary = deliveryType === 'Pickup'
     ? DELIVERY_LABELS[deliveryType]
-    : `${DELIVERY_LABELS[deliveryType]}${city ? ` • ${city}` : ''}${street ? `, ${street}` : ''}`
+    : deliveryType === 'NovaPoshta'
+      ? `${DELIVERY_LABELS[deliveryType]}${npCity ? ` • ${npCity.Description}` : ''}${npWarehouse ? `, ${npWarehouse.Description}` : ''}`
+      : `${DELIVERY_LABELS[deliveryType]}${city ? ` • ${city}` : ''}${street ? `, ${street}` : ''}`
   const paymentSummary = PAYMENT_LABELS[paymentMethod]
 
   if (!basket || basket.items.length === 0) {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center">
         <p className="text-gray-400 mb-4">Кошик порожній</p>
-        <button onClick={() => router.push('/products')} className="text-sm text-gray-900 underline">
+        <button onClick={() => router.push('/search')} className="text-sm text-gray-900 underline">
           До каталогу
         </button>
       </div>
@@ -316,7 +329,22 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
-              {deliveryType !== 'Pickup' && (
+              {deliveryType === 'NovaPoshta' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Місто</label>
+                    <CitySearch value={npCity} onChange={setNpCity} />
+                  </div>
+                  {npCity && (
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Відділення або поштомат</label>
+                      <WarehouseSelect cityRef={npCity.Ref} value={npWarehouse} onChange={setNpWarehouse} />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {deliveryType === 'UkrPoshta' && (
                 <div className="space-y-4">
                   <div>
                     <label className="text-xs text-gray-500 mb-1 block">Місто</label>

@@ -26,7 +26,7 @@ function SuccessContent() {
         </div>
       )}
       <Link
-        href="/products"
+        href="/search"
         className="inline-block bg-gray-900 text-white px-8 py-3 text-sm font-semibold tracking-widest uppercase hover:bg-gray-700 transition-colors"
       >
         До каталогу

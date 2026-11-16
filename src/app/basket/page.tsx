@@ -46,7 +46,7 @@ export default function BasketPage() {
       <div className="w-full max-w-7xl mx-auto px-4 py-20 text-center">
         <ShoppingCart className="w-12 h-12 text-gray-200 mx-auto mb-4" />
         <p className="text-gray-400 text-lg mb-6">Кошик порожній</p>
-        <Link href="/products" className="inline-block bg-gray-900 text-white px-8 py-3 text-sm font-semibold tracking-widest uppercase hover:bg-gray-700 transition-colors">
+        <Link href="/search" className="inline-block bg-gray-900 text-white px-8 py-3 text-sm font-semibold tracking-widest uppercase hover:bg-gray-700 transition-colors">
           До каталогу
         </Link>
       </div>

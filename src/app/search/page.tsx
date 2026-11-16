@@ -18,6 +18,7 @@ export default function SearchPage() {
   const size     = searchParams.get('size') ?? ''
   const purpose  = searchParams.get('purpose') ?? ''
   const category = searchParams.get('category') ?? ''
+  const section  = searchParams.get('section') ?? ''
   const page     = Number(searchParams.get('page') ?? '1')
 
   const [inputValue, setInputValue] = useState(q)
@@ -31,8 +32,8 @@ export default function SearchPage() {
   }, [inputValue])
 
   const { data, isLoading } = useQuery({
-    queryKey: ['search', q, brand, season, size, purpose, category, page],
-    queryFn: () => searchProducts({ q, brand, season, size, purpose, category, page }).then(r => r.data),
+    queryKey: ['search', q, brand, season, size, purpose, category, section, page],
+    queryFn: () => searchProducts({ q, brand, season, size, purpose, category, section, page }).then(r => r.data),
   })
 
   const setParam = (key: string, value: string) => {
@@ -54,7 +55,12 @@ export default function SearchPage() {
   const isActive = (current: string, value: string) =>
     current.split(',').includes(value)
 
+  const SECTION_LABELS: Record<string, string> = {
+    women: 'Жінки', men: 'Чоловіки', bags: 'Сумки', accessories: 'Аксесуари', care: 'Догляд',
+  }
+
   const activeFilters = [
+    ...section.split(',').filter(Boolean).map(v => ({ label: SECTION_LABELS[v] ?? v, paramKey: 'section', value: v })),
     ...brand.split(',').filter(Boolean).map(v => ({ label: v, paramKey: 'brand', value: v })),
     ...season.split(',').filter(Boolean).map(v => ({ label: v, paramKey: 'season', value: v })),
     ...size.split(',').filter(Boolean).map(v => ({ label: `Розмір: ${v}`, paramKey: 'size', value: v })),
@@ -102,8 +108,32 @@ export default function SearchPage() {
 
   const totalPages = data ? Math.ceil(data.total / 20) : 0
 
+  const SECTION_TABS = [
+    { value: '', label: 'Все' },
+    { value: 'women', label: 'Жіноче' },
+    { value: 'men', label: 'Чоловіче' },
+    { value: 'bags', label: 'Сумки' },
+    { value: 'accessories', label: 'Аксесуари' },
+  ]
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8">
+      <div className="flex gap-1 mb-6 border-b border-gray-200">
+        {SECTION_TABS.map(tab => (
+          <button
+            key={tab.value}
+            onClick={() => setParam('section', tab.value)}
+            className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+              section === tab.value
+                ? 'border-gray-900 text-gray-900'
+                : 'border-transparent text-gray-400 hover:text-gray-700'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       <div className="mb-6 max-w-xl">
         <input
           type="text"
@@ -126,6 +156,12 @@ export default function SearchPage() {
               <X className="w-3 h-3" />
             </button>
           ))}
+          <button
+            onClick={() => router.push('/search')}
+            className="px-3 py-1 text-sm text-gray-400 hover:text-gray-700 transition-colors"
+          >
+            Очистити фільтри
+          </button>
         </div>
       )}
 

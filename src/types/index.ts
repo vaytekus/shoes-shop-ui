@@ -99,7 +99,8 @@ export interface OrderItem {
 export interface Order {
   id: string
   customerId: string
-  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled'
+  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Returned'
+  trackingNumber: string
   firstName: string
   lastName: string
   phone: string
