@@ -23,6 +23,7 @@ export interface ProductVariant {
 export interface Product {
   id: string
   name: string
+  modelName: string | null
   description: string
   price: number
   brand: string | null
@@ -130,6 +131,7 @@ export interface SearchFacets {
 export interface SearchProductDocument {
   id: string
   name: string
+  modelName: string | null
   brand: string | null
   price: number | null
   discountPercent: number | null

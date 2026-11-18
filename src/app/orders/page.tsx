@@ -13,6 +13,7 @@ const STATUS_LABELS: Record<Order['status'], string> = {
   Shipped: 'Відправлено',
   Delivered: 'Доставлено',
   Cancelled: 'Скасовано',
+  Returned: 'Повернено',
 }
 
 const STATUS_CLASS: Record<Order['status'], string> = {
@@ -21,6 +22,7 @@ const STATUS_CLASS: Record<Order['status'], string> = {
   Shipped: 'bg-purple-100 text-purple-800',
   Delivered: 'bg-green-100 text-green-800',
   Cancelled: 'bg-red-100 text-red-800',
+  Returned: 'bg-orange-100 text-orange-800',
 }
 
 export default function OrdersPage() {
@@ -71,7 +73,7 @@ export default function OrdersPage() {
               <p className="text-sm text-gray-600">
                 {order.items.length} {order.items.length === 1 ? 'товар' : 'товари'}
               </p>
-              <p className="text-sm font-semibold text-gray-900">${order.totalAmount.toFixed(2)}</p>
+              <p className="text-sm font-semibold text-gray-900">{order.totalAmount.toLocaleString('uk-UA')} ₴</p>
             </div>
             <p className="text-xs text-gray-400 mt-1">
               {new Date(order.createdAt).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}

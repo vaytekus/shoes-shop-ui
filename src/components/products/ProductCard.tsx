@@ -97,7 +97,9 @@ export default function ProductCard({ product }: Props) {
       <p className="text-xs text-gray-400 mb-1">
         {isInStock ? 'In stock' : 'Out of stock'}
       </p>
-      <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
+      <p className="text-sm font-medium text-gray-900 truncate">
+        {[product.brand, product.modelName].filter(Boolean).join(' ') || product.name}
+      </p>
       {product.averageRating > 0 && (
         <div className="flex items-center gap-1 mt-0.5">
           <StarRating value={Math.round(product.averageRating)} size={13} />

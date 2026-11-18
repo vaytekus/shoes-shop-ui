@@ -107,7 +107,7 @@ export default function ProductPage() {
           {product.categoryName && <p className="text-sm text-gray-400 mb-1">{product.categoryName}</p>}
           {product.brand && <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{product.brand}</p>}
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            {[product.brand, currentVariant?.name].filter(Boolean).join(' ')}
+            {[product.brand, product.modelName].filter(Boolean).join(' ') || product.name}
           </h1>
           <ProductRating productId={id} />
           {product.discountPercent ? (

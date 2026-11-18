@@ -12,6 +12,7 @@ const STATUS_LABELS: Record<Order['status'], string> = {
   Shipped: 'Відправлено',
   Delivered: 'Доставлено',
   Cancelled: 'Скасовано',
+  Returned: 'Повернено',
 }
 
 const STATUS_CLASS: Record<Order['status'], string> = {
@@ -20,6 +21,7 @@ const STATUS_CLASS: Record<Order['status'], string> = {
   Shipped: 'bg-purple-100 text-purple-800',
   Delivered: 'bg-green-100 text-green-800',
   Cancelled: 'bg-red-100 text-red-800',
+  Returned: 'bg-orange-100 text-orange-800',
 }
 
 const DELIVERY_LABELS = { NovaPoshta: 'Нова Пошта', UkrPoshta: 'Укрпошта', Pickup: 'Самовивіз' }
@@ -66,6 +68,9 @@ export default function OrderDetailPage() {
               {order.shippingAddress.city}, {order.shippingAddress.street}
             </p>
           )}
+          {order.trackingNumber && (
+            <p className="text-sm text-gray-600 mt-1">ТТН: <span className="font-mono">{order.trackingNumber}</span></p>
+          )}
           <p className="text-sm text-gray-600 mt-1">{PAYMENT_LABELS[order.paymentMethod]}</p>
         </div>
       </div>
@@ -86,7 +91,7 @@ export default function OrderDetailPage() {
               {item.size && <p className="text-xs text-gray-500 mt-0.5">Розмір: {item.size}</p>}
               <p className="text-xs text-gray-500 mt-0.5">× {item.quantity}</p>
             </div>
-            <p className="text-sm font-semibold text-gray-900 shrink-0">${(item.price * item.quantity).toFixed(2)}</p>
+            <p className="text-sm font-semibold text-gray-900 shrink-0">{(item.price * item.quantity).toLocaleString('uk-UA')} ₴</p>
           </div>
         ))}
       </div>
@@ -96,7 +101,7 @@ export default function OrderDetailPage() {
         <p className="text-sm text-gray-500">
           {new Date(order.createdAt).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
-        <p className="text-lg font-semibold text-gray-900">Разом: ${order.totalAmount.toFixed(2)}</p>
+        <p className="text-lg font-semibold text-gray-900">Разом: {order.totalAmount.toLocaleString('uk-UA')} ₴</p>
       </div>
     </div>
   )
